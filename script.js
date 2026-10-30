@@ -11,7 +11,7 @@ document.querySelector('.close').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',event=>{const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close()});
 form.addEventListener('submit',event=>{event.preventDefault();if(dateInput.value<localDate){dateInput.setCustomValidity('Please choose today or a future date.');dateInput.reportValidity();return}const visit={name:form.elements.name.value,email:form.elements.email.value,service:form.elements.service.value,date:dateInput.value,vision:form.elements.vision.value};try{localStorage.setItem('saloon-visit',JSON.stringify(visit));confirmation.textContent=`Your visit plan is saved, ${visit.name}. ${visit.service} · ${visit.date}. This is a personal reminder only; no appointment has been confirmed.`}catch{confirmation.textContent='Your visit plan is ready, but this browser could not save it. No appointment has been confirmed.'}form.hidden=true;confirmation.hidden=false});
 dateInput.addEventListener('input',()=>dateInput.setCustomValidity(''));
-const collections=[{title:'THE EVERYDAY MUSE',copy:'Individual by nature.<br>Effortless by design.',filter:'saturate(.35)',position:'center 30%'},{title:'A SOFTER PERSPECTIVE',copy:'Soft movement.<br>A little more freedom.',filter:'sepia(.3) saturate(.6)',position:'45% 40%'},{title:'YOUR OWN EXPRESSION',copy:'Beautifully considered.<br>Unmistakably you.',filter:'grayscale(1)',position:'60% 20%'}];let slide=0;
+const collections=[{title:'THE CRAFT OF GOOD HAIR',copy:'Expert hands.<br>A personal touch.',filter:'saturate(.35)',position:'center 30%'},{title:'A SOFTER PERSPECTIVE',copy:'Soft movement.<br>A little more freedom.',filter:'sepia(.3) saturate(.6)',position:'45% 40%'},{title:'YOUR OWN EXPRESSION',copy:'Beautifully considered.<br>Unmistakably you.',filter:'grayscale(1)',position:'60% 20%'}];let slide=0;
 function showSlide(direction){slide=(slide+direction+collections.length)%collections.length;const collection=collections[slide];document.querySelector('.edition>span').textContent=collection.title;document.querySelector('.edition p').innerHTML=collection.copy;document.querySelector('.edition small').textContent=`COLLECTION — 0${slide+1} / 03`;document.querySelector('#slide-number').innerHTML=`0${slide+1} <i>/ 03</i>`;document.querySelector('.photo').style.filter=collection.filter;document.querySelector('.photo').style.backgroundPosition=collection.position}
 document.querySelector('#previous').addEventListener('click',()=>showSlide(-1));document.querySelector('#next').addEventListener('click',()=>showSlide(1));
 
@@ -44,7 +44,7 @@ document.querySelector('#case-prev').addEventListener('click',()=>moveCase(-1));
 track.addEventListener('keydown',event=>{if(event.target!==track)return;if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();moveCase(event.key==='ArrowRight'?1:-1)}});
 document.querySelector('#comparison').addEventListener('input',event=>document.querySelector('.comparison').style.setProperty('--compare',`${event.target.value}%`));
 const lookDialog=document.querySelector('#look-dialog');
-document.querySelectorAll('.zoom-look').forEach(button=>button.addEventListener('click',()=>{document.querySelector('#look-title').textContent=button.dataset.look;lookDialog.querySelector('img').style.filter=button.classList.contains('monochrome')?'grayscale(1)':'none';lookDialog.showModal()}));
+document.querySelectorAll('.zoom-look').forEach(button=>button.addEventListener('click',()=>{document.querySelector('#look-title').textContent=button.dataset.look;const image=button.querySelector('img');lookDialog.querySelector('img').src=image.getAttribute('src');lookDialog.querySelector('img').alt=image.alt;lookDialog.querySelector('img').style.filter=button.classList.contains('monochrome')?'grayscale(1)':'none';lookDialog.showModal()}));
 document.querySelector('.look-close').addEventListener('click',()=>lookDialog.close());
 const contactDialog=document.querySelector('#contact-dialog');
 // Configure a verified business number in international digits before publishing.
@@ -53,3 +53,12 @@ document.querySelectorAll('.whatsapp').forEach(button=>button.addEventListener('
 document.querySelector('.contact-close').addEventListener('click',()=>contactDialog.close());
 document.querySelector('#contact-plan').addEventListener('click',()=>{contactDialog.close();form.hidden=false;confirmation.hidden=true;dialog.showModal()});
 [lookDialog,contactDialog].forEach(modal=>modal.addEventListener('click',event=>{if(event.target===modal){const rect=modal.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)modal.close()}}));
+
+// A welcome invitation appears once per page visit, without interrupting another dialog.
+const welcomeDialog=document.querySelector('#welcome-dialog');
+const welcomeTimer=window.setTimeout(()=>{if(!document.querySelector('dialog[open]'))welcomeDialog.showModal()},900);
+function closeWelcome(){window.clearTimeout(welcomeTimer);welcomeDialog.close()}
+document.querySelector('.welcome-close').addEventListener('click',closeWelcome);
+document.querySelector('#welcome-book').addEventListener('click',()=>{closeWelcome();form.hidden=false;confirmation.hidden=true;dialog.showModal()});
+document.querySelector('#welcome-explore').addEventListener('click',()=>{closeWelcome();document.querySelector('#services').scrollIntoView({behavior:reducedMotion?'instant':'smooth'});document.querySelector('#services h2').setAttribute('tabindex','-1');document.querySelector('#services h2').focus({preventScroll:true})});
+welcomeDialog.addEventListener('click',event=>{if(event.target!==welcomeDialog)return;const rect=welcomeDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)closeWelcome()});

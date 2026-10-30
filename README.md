@@ -21,3 +21,9 @@ Validated with Chromium: eight sections, bottle rotation and finish selection, h
 ## Publication
 
 GitHub Actions publishes the static site to GitHub Pages on pushes to `main`, or via the workflow's manual Run workflow action. In the repository Settings → Pages, select **GitHub Actions** as the build and deployment source. The deployment job publishes only HTML, styles, JavaScript and image assets. The deployment environment reports the live URL when successful.
+
+Photography update: service cards and lookbook entries each use distinct photographs from the redKath/hair-salon sample assets; the welcome background is from codewithsadee/barber (gallery-4). The hero portrait remains from Start Bootstrap Agency. The comparison intentionally uses one photograph in original and graded versions; enlarged images follow the selected card.
+
+An animated welcome invitation opens 900ms after each page load, provided another dialog is not open. Visitors can close it (including Escape/backdrop), open the visit planner, or jump to services. Motion respects reduced-motion preferences. Booking remains a local visit planner, not a confirmed appointment.
+
+The current hero uses codewithsadee/barber's hero-banner photograph to foreground an in-salon haircut, and the welcome invitation uses a separate service photograph. All six service/lookbook cards have different sources; only the original/graded comparison shares a source intentionally. Automatic welcome, both CTAs, Escape dismissal, correct image enlargement and mobile layout were verified in Chromium.
